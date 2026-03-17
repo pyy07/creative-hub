@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-serif), serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand: #5A5A40;
+  --color-ink: #1a1a1a;
+  --color-paper: #f5f5f0;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-ink bg-paper antialiased;
+  }
+}
+
+@layer components {
+  .prose-custom {
+    @apply prose prose-stone max-w-none;
+    @apply prose-headings:font-serif prose-headings:text-ink;
+    @apply prose-p:text-brand/80 prose-p:leading-relaxed;
+    @apply prose-blockquote:border-brand/20 prose-blockquote:italic;
+    @apply prose-code:bg-brand/5 prose-code:text-brand prose-code:rounded prose-code:px-1;
+    @apply prose-pre:bg-ink prose-pre:rounded-2xl;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "灵感创作中心 (CreativeHub)",
+  "description": "一站式内容创作平台，集成AI灵感搜索、Markdown编辑、素材管理及多平台发布适配。",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
