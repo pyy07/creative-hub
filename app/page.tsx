@@ -79,6 +79,9 @@ const MarkdownPreview = ({ content }: { content: string }) => {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
+        pre({ children }: any) {
+          return <>{children}</>;
+        },
         code({ node, inline, className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '');
           if (!inline && match) {
@@ -88,9 +91,17 @@ const MarkdownPreview = ({ content }: { content: string }) => {
             if (match[1] === 'echarts') {
               return <ECharts option={String(children).replace(/\n$/, '')} />;
             }
+            // 普通代码块，用 pre 包裹
+            return (
+              <pre className="bg-paper rounded-2xl p-4 overflow-x-auto my-4 border border-[#5A5A40]/10">
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              </pre>
+            );
           }
           return (
-            <code className={className} {...props}>
+            <code className="bg-brand/5 text-brand rounded px-1" {...props}>
               {children}
             </code>
           );
