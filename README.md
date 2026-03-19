@@ -9,6 +9,7 @@
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript)
 ![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)
+![Turso](https://img.shields.io/badge/Turso-libSQL-4.1A75F9?logo=sqlite)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss)
 
 </div>
@@ -25,7 +26,7 @@
 | **AI 内容适配** | 同一篇文章自动生成适合微信公众号（专业深度）和小红书（活泼简洁）的不同版本 |
 | **发布历史** | 所有发布版本持久化存储，随时查看/复制全文 |
 | **素材管理** | 收藏文本、链接、图片等素材，便于创作时引用 |
-| **本地持久化** | SQLite 本地存储，数据安全持久化 |
+| **多存储支持** | 支持 SQLite（本地）和 Turso（Vercel 部署），通过环境变量配置 |
 
 ---
 
@@ -144,12 +145,34 @@ OPENAI_BASE_URL="https://api.openai.com/v1"
 # 使用的模型（可选，默认 gpt-4o-mini）
 OPENAI_MODEL="gpt-4o-mini"
 
+# 数据库配置（可选，默认为 SQLite）
+DB_PROVIDER="sqlite"  # 或 "turso"
+
+# SQLite 配置（当 DB_PROVIDER=sqlite 时）
+SQLITE_PATH="./data.db"
+
+# Turso 配置（当 DB_PROVIDER=turso 时）
+TURSO_DATABASE_URL="libsql://your-database.turso.io"
+TURSO_AUTH_TOKEN="your-auth-token"
+
 # 访问密码（必填）
 ADMIN_PASSWORD="your_password_here"
 
 # JWT 签名密钥（必填，生产环境请设置为随机强密钥）
 JWT_SECRET="your_jwt_secret_here"
 ```
+
+#### 数据库 Provider
+
+| Provider | 说明 | 适用场景 |
+|----------|------|----------|
+| `sqlite`（默认） | 本地 SQLite 文件 | 本地开发 |
+| `turso` | Turso (libSQL) 云数据库 | Vercel 部署 |
+
+**Turso 配置步骤：**
+1. 注册 [Turso](https://turso.tech/) 并创建数据库
+2. 获取 `DATABASE_URL` 和 `AUTH_TOKEN`
+3. 设置环境变量：`DB_PROVIDER=turso`
 
 #### 支持的 AI 服务商
 
@@ -178,7 +201,7 @@ npm run dev
 | 框架 | Next.js 15 (App Router) |
 | UI | React 19 + Tailwind CSS v4 |
 | 语言 | TypeScript 5.7 |
-| 数据库 | SQLite (better-sqlite3) |
+| 数据库 | SQLite / Turso (通过 DB_PROVIDER 配置) |
 | 认证 | JWT（jose）+ 密码登录 |
 | AI 接口 | OpenAI 兼容 API（服务端代理） |
 | 图表 | ECharts + Mermaid.js |

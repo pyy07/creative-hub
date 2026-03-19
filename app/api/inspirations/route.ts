@@ -3,7 +3,7 @@ import { createInspiration } from '../../../src/db';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const inspiration = createInspiration({
+  const inspiration = await createInspiration({
     query: body.query || '',
     results: body.results || '',
   });

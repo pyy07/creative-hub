@@ -12,6 +12,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@tailwindcss/typography": "^0.5.19",
     "better-sqlite3": "^12.8.0",
+    "@libsql/client": "^0.15.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "echarts": "^6.0.0",

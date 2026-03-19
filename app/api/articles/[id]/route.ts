@@ -4,7 +4,7 @@ import { updateArticle, deleteArticle, getArticle } from '../../../../src/db';
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const body = await req.json();
-  const article = updateArticle(id, {
+  const article = await updateArticle(id, {
     title: body.title,
     content: body.content,
     status: body.status,
@@ -19,10 +19,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const article = getArticle(id);
+  const article = await getArticle(id);
   if (!article) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
-  deleteArticle(id);
+  await deleteArticle(id);
   return NextResponse.json({ ok: true });
 }
