@@ -1,5 +1,4 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 
 # CreativeHub · 灵感创作中心
 
@@ -54,9 +53,9 @@
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
 │  │  src/db.ts   │  │  src/services│  │  src/types   │      │
 │  │  src/auth.ts │  │ /aiService   │  │    .ts       │      │
-│  │ SQLite+JWT   │  │  .ts         │  │ Article      │      │
-│  │ (better-     │  │ (HTTP Client)│  │ Material     │      │
-│  │  sqlite3)    │  └──────┬───────┘  │ Inspiration  │      │
+│  │  DB Provider │  │  .ts         │  │ Article      │      │
+│  │  (SQLite/    │  │ (HTTP Client)│  │ Material     │      │
+│  │   Turso)+JWT │  └──────┬───────┘  │ Inspiration  │      │
 │  └──────┬───────┘        │          │ Publication  │      │
 │         │                │          └──────────────┘      │
 └─────────┼────────────────┼─────────────────────────────────┘
@@ -71,9 +70,9 @@
           ┌─────────────────┼─────────────────┐
           ▼                 ▼                 ▼
 ┌──────────────┐  ┌─────────────────────────────────────┐
-│   SQLite     │  │     app/api/ai/route.ts              │
-│  (data.db)   │  │   POST /api/ai                       │
-│              │  │   ├── action: 'inspiration'          │
+│   SQLite /   │  │     app/api/ai/route.ts              │
+│   Turso      │  │   POST /api/ai                       │
+│  (可配置)     │  │   ├── action: 'inspiration'          │
 │  articles    │  │   └── action: 'adapt'               │
 │  materials   │  └──────────────┬──────────────────────┘
 │  inspirations│                 ▼
@@ -101,7 +100,7 @@ creative-hub/
 │   ├── layout.tsx              # 根布局（字体加载、HTML 结构）
 │   └── page.tsx                # 主应用（所有视图组件）
 ├── src/
-│   ├── db.ts                   # SQLite 数据库（better-sqlite3）
+│   ├── db.ts                   # 数据库抽象层（SQLite/Turso）
 │   ├── auth.ts                 # JWT 认证（jose）
 │   ├── services/
 │   │   └── aiService.ts        # AI 服务客户端（调用 /api/ai）
