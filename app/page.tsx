@@ -179,7 +179,7 @@ export default function Page() {
   useEffect(() => {
     mermaid.initialize({
       startOnLoad: true,
-      theme: 'neutral',
+      theme: 'base',
       securityLevel: 'loose',
       fontFamily: 'var(--font-sans)',
     });
