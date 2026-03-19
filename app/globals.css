@@ -24,6 +24,6 @@
     @apply prose-p:text-brand/80 prose-p:leading-relaxed;
     @apply prose-blockquote:border-brand/20 prose-blockquote:italic;
     @apply prose-code:bg-brand/5 prose-code:text-brand prose-code:rounded prose-code:px-1;
-    @apply prose-pre:bg-ink prose-pre:rounded-2xl;
+    @apply prose-pre:bg-paper prose-pre:text-ink prose-pre:rounded-2xl;
   }
 }
