@@ -8,7 +8,7 @@
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript)
 ![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)
-![Turso](https://img.shields.io/badge/Turso-libSQL-4.1A75F9?logo=sqlite)
+![Turso](https://img.shields.io/badge/Turso-libsql-4ff7d1?logo=turso)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss)
 
 </div>
