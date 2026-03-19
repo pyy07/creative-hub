@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -79,21 +81,44 @@ const MarkdownPreview = ({ content }: { content: string }) => {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        pre({ children }: any) {
-          return <pre className="bg-paper rounded-2xl p-4 overflow-x-auto my-4 border border-[#5A5A40]/10">{children}</pre>;
-        },
         code({ node, inline, className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '');
-          if (!inline && match) {
-            if (match[1] === 'mermaid') {
+          const lang = match ? match[1] : '';
+
+          // 代码块（非行内）
+          if (!inline && lang) {
+            if (lang === 'mermaid') {
               return <Mermaid chart={String(children).replace(/\n$/, '')} />;
             }
-            if (match[1] === 'echarts') {
+            if (lang === 'echarts') {
               return <ECharts option={String(children).replace(/\n$/, '')} />;
             }
+            // 清理代码内容中的反引号
+            let code = String(children);
+            code = code.replace(/^```\w*$/gm, '').replace(/^`+/, '').replace(/`+$/, '');
+
+            return (
+              <SyntaxHighlighter
+                language={lang}
+                style={prism}
+                PreTag="div"
+                customStyle={{
+                  backgroundColor: 'transparent',
+                  borderRadius: '1rem',
+                  padding: '1rem',
+                  margin: '1rem 0',
+                  border: '1px solid rgba(90, 90, 64, 0.1)',
+                  fontSize: '0.875rem',
+                }}
+              >
+                {code.replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            );
           }
+
+          // 行内代码
           return (
-            <code className={className} {...props}>
+            <code className={className} style={{ backgroundColor: 'transparent' }} {...props}>
               {children}
             </code>
           );
@@ -434,6 +459,37 @@ function EditorView({ article, onSave }: { article: Article | null, onSave: (art
   const [isSaving, setIsSaving] = useState(false);
   const [publications, setPublications] = useState<Publication[]>([]);
   const [showPublication, setShowPublication] = useState<Publication | null>(null);
+  const [splitRatio, setSplitRatio] = useState(50);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = () => {
+    setIsDragging(true);
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      const container = document.getElementById('editor-container');
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const ratio = ((e.clientX - rect.left) / rect.width) * 100;
+      setSplitRatio(Math.min(Math.max(ratio, 20), 80));
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
 
   const loadPublications = async (articleId: string) => {
     const res = await fetch(`/api/publications?articleId=${articleId}`);
@@ -522,9 +578,9 @@ function EditorView({ article, onSave }: { article: Article | null, onSave: (art
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div id="editor-container" className="flex-1 flex overflow-hidden">
         {/* Editor */}
-        <div className="flex-1 h-full border-r border-[#5A5A40]/10 p-6 bg-white">
+        <div style={{ width: `${splitRatio}%` }} className="h-full border-r border-[#5A5A40]/10 p-6 bg-white">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -533,10 +589,19 @@ function EditorView({ article, onSave }: { article: Article | null, onSave: (art
           />
         </div>
 
+        {/* Resizable Divider */}
+        <div
+          onMouseDown={handleMouseDown}
+          className={cn(
+            "w-1.5 cursor-col-resize bg-[#5A5A40]/10 hover:bg-[#5A5A40]/30 transition-colors flex-shrink-0",
+            isDragging && "bg-[#5A5A40]/40"
+          )}
+        />
+
         {/* Preview & History */}
-        <div className="flex-1 h-full flex flex-col overflow-hidden bg-[#fcfcf9]">
+        <div style={{ width: `${100 - splitRatio}%` }} className="h-full flex flex-col overflow-hidden bg-[#fcfcf9]">
           <div className="flex-1 p-6 overflow-auto">
-            <div className="max-w-prose mx-auto w-full">
+            <div className="mx-auto w-full max-w-4xl">
               <div className="text-xs font-mono text-[#5A5A40]/40 uppercase tracking-widest mb-8">预览</div>
               <div className="prose-custom">
                 <MarkdownPreview content={content} />
